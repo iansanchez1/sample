@@ -13,6 +13,53 @@ struct NewWord
 	vector<int> chapters;
 };
 
+void addword(string wordbuilt, int linecurr, int chaptercurr, vector<NewWord>& index)
+{
+	bool wordfound = false;
+	for (int i0 = 0; i0 < index.size(); i0++)
+	{
+		if (index[i0].word == wordbuilt)
+		{
+			wordfound = true;
+			bool linefound = false;
+			for (int i1 = 0; i1 < index[i0].lines.size(); i1++)
+			{
+				if (index[i0].lines[i1] == linecurr)
+				{
+					linefound = true;
+					break;
+				}
+			}
+			if (not linefound)
+			{
+				index[i0].lines.push_back(linecurr);
+			}
+			bool chapfound = false;
+			for (int i2 = 0; i2 < index[i0].chapters.size(); i2++)
+			{
+				if (index[i0].chapters[i2] == chaptercurr)
+				{
+					chapfound = true;
+					break;
+				}
+			}
+			if (not chapfound)
+			{
+				index[i0].chapters.push_back(chaptercurr);
+			}
+			break;
+		}
+	}
+	if (not wordfound)
+	{
+		NewWord w;
+		w.word = wordbuilt;
+		w.lines.push_back(linecurr);
+		w.chapters.push_back(chaptercurr);
+		index.push_back(w);
+	}
+}
+
 void scan(vector<NewWord>& index, ifstream& file, vector<string>& linec)
 {
 	char character;
@@ -35,49 +82,7 @@ void scan(vector<NewWord>& index, ifstream& file, vector<string>& linec)
 		{
 			if (wordbuilt != "")
 			{
-				bool wordfound = false;
-				for (int i0 = 0; i0 < index.size(); i0++)
-				{
-					if (index[i0].word == wordbuilt)
-					{
-						wordfound = true;
-						bool linefound = false;
-						for (int i1 = 0; i1 < index[i0].lines.size(); i1++)
-						{
-							if (index[i0].lines[i1] == linecurr)
-							{
-								linefound = true;
-								break;
-							}
-						}
-						if (not linefound)
-						{
-							index[i0].lines.push_back(linecurr);
-						}
-						bool chapfound = false;
-						for (int i2 = 0; i2 < index[i0].chapters.size(); i2++)
-						{
-							if (index[i0].chapters[i2] == chaptercurr)
-							{
-								chapfound = true;
-								break;
-							}
-						}
-						if (not chapfound)
-						{
-							index[i0].chapters.push_back(chaptercurr);
-						}
-						break;
-					}
-				}
-				if (not wordfound)
-				{
-					NewWord w;
-					w.word = wordbuilt;
-					w.lines.push_back(linecurr);
-					w.chapters.push_back(chaptercurr);
-					index.push_back(w);
-				}
+				addword(wordbuilt, linecurr, chaptercurr, index);
 				if (wordbuilt == "chapter")
 				{
 					chaptercurr++;
